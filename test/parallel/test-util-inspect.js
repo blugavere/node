@@ -12,8 +12,10 @@ assert.strictEqual(util.inspect(function() {}), '[Function]');
 assert.strictEqual(util.inspect(undefined), 'undefined');
 assert.strictEqual(util.inspect(null), 'null');
 assert.strictEqual(util.inspect(/foo(bar\n)?/gi), '/foo(bar\\n)?/gi');
-assert.strictEqual(util.inspect(new Date('Sun, 14 Feb 2010 11:48:40 GMT')),
-  new Date('2010-02-14T12:48:40+01:00').toISOString());
+assert.strictEqual(
+  util.inspect(new Date('Sun, 14 Feb 2010 11:48:40 GMT')),
+  new Date('2010-02-14T12:48:40+01:00').toISOString()
+);
 assert.strictEqual(util.inspect(new Date('')), (new Date('')).toString());
 
 assert.strictEqual(util.inspect('\n\u0001'), "'\\n\\u0001'");
@@ -30,18 +32,24 @@ assert.strictEqual(util.inspect({a: 1, b: 2}), '{ a: 1, b: 2 }');
 assert.strictEqual(util.inspect({'a': {}}), '{ a: {} }');
 assert.strictEqual(util.inspect({'a': {'b': 2}}), '{ a: { b: 2 } }');
 assert.strictEqual(util.inspect({'a': {'b': { 'c': { 'd': 2 }}}}),
-  '{ a: { b: { c: [Object] } } }');
+                   '{ a: { b: { c: [Object] } } }');
 assert.strictEqual(util.inspect({'a': {'b': { 'c': { 'd': 2 }}}}, false, null),
-  '{ a: { b: { c: { d: 2 } } } }');
+                   '{ a: { b: { c: { d: 2 } } } }');
 assert.strictEqual(util.inspect([1, 2, 3], true), '[ 1, 2, 3, [length]: 3 ]');
 assert.strictEqual(util.inspect({'a': {'b': { 'c': 2}}}, false, 0),
-  '{ a: [Object] }');
+                   '{ a: [Object] }');
 assert.strictEqual(util.inspect({'a': {'b': { 'c': 2}}}, false, 1),
-  '{ a: { b: [Object] } }');
+                   '{ a: { b: [Object] } }');
 assert.strictEqual(util.inspect(Object.create({},
   {visible: {value: 1, enumerable: true}, hidden: {value: 2}})),
   '{ visible: 1 }'
 );
+
+{
+  const regexp = /regexp/;
+  regexp.aprop = 42;
+  assert.strictEqual(util.inspect({a: regexp}, false, 0), '{ a: /regexp/ }');
+}
 
 assert(/Object/.test(
   util.inspect({a: {a: {a: {a: {}}}}}, undefined, undefined, true)
@@ -58,29 +66,29 @@ for (const showHidden of [true, false]) {
     'ArrayBuffer { byteLength: 4 }'
   );
   assert.strictEqual(util.inspect(new DataView(ab, 1, 2), showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4 } }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4 } }');
   assert.strictEqual(
     util.inspect(ab, showHidden),
     'ArrayBuffer { byteLength: 4 }'
   );
   assert.strictEqual(util.inspect(dv, showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4 } }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4 } }');
   ab.x = 42;
   dv.y = 1337;
   assert.strictEqual(util.inspect(ab, showHidden),
-               'ArrayBuffer { byteLength: 4, x: 42 }');
+                     'ArrayBuffer { byteLength: 4, x: 42 }');
   assert.strictEqual(util.inspect(dv, showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4, x: 42 },\n' +
-               '  y: 1337 }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4, x: 42 },\n' +
+                     '  y: 1337 }');
 }
 
 // Now do the same checks but from a different context
@@ -92,29 +100,29 @@ for (const showHidden of [true, false]) {
     'ArrayBuffer { byteLength: 4 }'
   );
   assert.strictEqual(util.inspect(new DataView(ab, 1, 2), showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4 } }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4 } }');
   assert.strictEqual(
     util.inspect(ab, showHidden),
     'ArrayBuffer { byteLength: 4 }'
   );
   assert.strictEqual(util.inspect(dv, showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4 } }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4 } }');
   ab.x = 42;
   dv.y = 1337;
   assert.strictEqual(util.inspect(ab, showHidden),
-               'ArrayBuffer { byteLength: 4, x: 42 }');
+                     'ArrayBuffer { byteLength: 4, x: 42 }');
   assert.strictEqual(util.inspect(dv, showHidden),
-               'DataView {\n' +
-               '  byteLength: 2,\n' +
-               '  byteOffset: 1,\n' +
-               '  buffer: ArrayBuffer { byteLength: 4, x: 42 },\n' +
-               '  y: 1337 }');
+                     'DataView {\n' +
+                     '  byteLength: 2,\n' +
+                     '  byteOffset: 1,\n' +
+                     '  buffer: ArrayBuffer { byteLength: 4, x: 42 },\n' +
+                     '  y: 1337 }');
 }
 
 
@@ -132,15 +140,16 @@ for (const showHidden of [true, false]) {
     const array = new constructor(new ArrayBuffer(byteLength), 0, length);
     array[0] = 65;
     array[1] = 97;
-    assert.strictEqual(util.inspect(array, true),
-                 `${constructor.name} [\n` +
-                 `  65,\n` +
-                 `  97,\n` +
-                 `  [BYTES_PER_ELEMENT]: ${constructor.BYTES_PER_ELEMENT},\n` +
-                 `  [length]: ${length},\n` +
-                 `  [byteLength]: ${byteLength},\n` +
-                 `  [byteOffset]: 0,\n` +
-                 `  [buffer]: ArrayBuffer { byteLength: ${byteLength} } ]`);
+    assert.strictEqual(
+      util.inspect(array, true),
+      `${constructor.name} [\n` +
+      '  65,\n' +
+      '  97,\n' +
+      `  [BYTES_PER_ELEMENT]: ${constructor.BYTES_PER_ELEMENT},\n` +
+      `  [length]: ${length},\n` +
+      `  [byteLength]: ${byteLength},\n` +
+      '  [byteOffset]: 0,\n' +
+      `  [buffer]: ArrayBuffer { byteLength: ${byteLength} } ]`);
     assert.strictEqual(
       util.inspect(array, false),
       `${constructor.name} [ 65, 97 ]`
@@ -159,23 +168,22 @@ for (const showHidden of [true, false]) {
   Uint8ClampedArray ].forEach((constructor) => {
     const length = 2;
     const byteLength = length * constructor.BYTES_PER_ELEMENT;
-    const array = vm.runInNewContext('new constructor(new ArrayBuffer(' +
-                                     'byteLength), 0, length)',
-                                     { constructor: constructor,
-                                       byteLength: byteLength,
-                                       length: length
-                                     });
+    const array = vm.runInNewContext(
+      'new constructor(new ArrayBuffer(byteLength), 0, length)',
+      { constructor, byteLength, length }
+    );
     array[0] = 65;
     array[1] = 97;
-    assert.strictEqual(util.inspect(array, true),
-                 `${constructor.name} [\n` +
-                 `  65,\n` +
-                 `  97,\n` +
-                 `  [BYTES_PER_ELEMENT]: ${constructor.BYTES_PER_ELEMENT},\n` +
-                 `  [length]: ${length},\n` +
-                 `  [byteLength]: ${byteLength},\n` +
-                 `  [byteOffset]: 0,\n` +
-                 `  [buffer]: ArrayBuffer { byteLength: ${byteLength} } ]`);
+    assert.strictEqual(
+      util.inspect(array, true),
+      `${constructor.name} [\n` +
+      '  65,\n' +
+      '  97,\n' +
+      `  [BYTES_PER_ELEMENT]: ${constructor.BYTES_PER_ELEMENT},\n` +
+      `  [length]: ${length},\n` +
+      `  [byteLength]: ${byteLength},\n` +
+      '  [byteOffset]: 0,\n' +
+      `  [buffer]: ArrayBuffer { byteLength: ${byteLength} } ]`);
     assert.strictEqual(
       util.inspect(array, false),
       `${constructor.name} [ 65, 97 ]`
@@ -198,8 +206,8 @@ for (const showHidden of [true, false]) {
 // Objects without prototype
 {
   const out = util.inspect(Object.create(null,
-      { name: {value: 'Tim', enumerable: true},
-        hidden: {value: 'secret'}}), true);
+    { name: {value: 'Tim', enumerable: true},
+      hidden: {value: 'secret'}}), true);
   if (out !== "{ [hidden]: 'secret', name: 'Tim' }" &&
       out !== "{ name: 'Tim', [hidden]: 'secret' }") {
     common.fail(`unexpected value for out ${out}`);
@@ -216,13 +224,13 @@ assert.strictEqual(
 
 // Dynamic properties
 assert.strictEqual(util.inspect({get readonly() {}}),
-  '{ readonly: [Getter] }');
+                   '{ readonly: [Getter] }');
 
 assert.strictEqual(util.inspect({get readwrite() {}, set readwrite(val) {}}),
-  '{ readwrite: [Getter/Setter] }');
+                   '{ readwrite: [Getter/Setter] }');
 
 assert.strictEqual(util.inspect({set writeonly(val) {}}),
-  '{ writeonly: [Setter] }');
+                   '{ writeonly: [Setter] }');
 
 var value = {};
 value['a'] = value;
@@ -244,6 +252,11 @@ assert.strictEqual(util.inspect(value), '[ 1, 2, 3, growingLength: [Getter] ]');
 value = function() {};
 value.aprop = 42;
 assert.strictEqual(util.inspect(value), '{ [Function: value] aprop: 42 }');
+
+// Anonymous function with properties
+value = (() => function() {})();
+value.aprop = 42;
+assert.strictEqual(util.inspect(value), '{ [Function] aprop: 42 }');
 
 // Regular expressions with properties
 value = /123/ig;
@@ -655,7 +668,7 @@ if (typeof Symbol !== 'undefined') {
 
   assert.strictEqual(util.inspect(subject), '[ 1, 2, 3 ]');
   assert.strictEqual(util.inspect(subject, options),
-      '[ 1, 2, 3, [length]: 3, [Symbol(symbol)]: 42 ]');
+                     '[ 1, 2, 3, [length]: 3, [Symbol(symbol)]: 42 ]');
 }
 
 // test Set
@@ -672,16 +685,23 @@ assert.strictEqual(
 {
   assert.strictEqual(util.inspect(new Map()), 'Map {}');
   assert.strictEqual(util.inspect(new Map([[1, 'a'], [2, 'b'], [3, 'c']])),
-               'Map { 1 => \'a\', 2 => \'b\', 3 => \'c\' }');
+                     'Map { 1 => \'a\', 2 => \'b\', 3 => \'c\' }');
   const map = new Map([['foo', null]]);
   map.bar = 42;
   assert.strictEqual(util.inspect(map, true),
-               'Map { \'foo\' => null, [size]: 1, bar: 42 }');
+                     'Map { \'foo\' => null, [size]: 1, bar: 42 }');
 }
 
 // test Promise
 assert.strictEqual(util.inspect(Promise.resolve(3)), 'Promise { 3 }');
-assert.strictEqual(util.inspect(Promise.reject(3)), 'Promise { <rejected> 3 }');
+
+{
+  const rejected = Promise.reject(3);
+  assert.strictEqual(util.inspect(rejected), 'Promise { <rejected> 3 }');
+  // squelch UnhandledPromiseRejection
+  rejected.catch(() => {});
+}
+
 assert.strictEqual(
   util.inspect(new Promise(function() {})),
   'Promise { <pending> }'
@@ -763,15 +783,15 @@ checkAlignment(new Map(big_array.map(function(y) { return [y, null]; })));
   const x = new ObjectSubclass();
   x.foo = 42;
   assert.strictEqual(util.inspect(x),
-               'ObjectSubclass { foo: 42 }');
+                     'ObjectSubclass { foo: 42 }');
   assert.strictEqual(util.inspect(new ArraySubclass(1, 2, 3)),
-               'ArraySubclass [ 1, 2, 3 ]');
+                     'ArraySubclass [ 1, 2, 3 ]');
   assert.strictEqual(util.inspect(new SetSubclass([1, 2, 3])),
-               'SetSubclass { 1, 2, 3 }');
+                     'SetSubclass { 1, 2, 3 }');
   assert.strictEqual(util.inspect(new MapSubclass([['foo', 42]])),
-              'MapSubclass { \'foo\' => 42 }');
+                     'MapSubclass { \'foo\' => 42 }');
   assert.strictEqual(util.inspect(new PromiseSubclass(function() {})),
-               'PromiseSubclass { <pending> }');
+                     'PromiseSubclass { <pending> }');
 }
 
 // Corner cases.
@@ -816,7 +836,7 @@ checkAlignment(new Map(big_array.map(function(y) { return [y, null]; })));
 
 {
   const x = Array(101);
-  assert(/^\[ ... 101 more items \]$/.test(
+  assert(/^\[ ... 101 more items ]$/.test(
       util.inspect(x, {maxArrayLength: 0})));
 }
 
@@ -832,7 +852,7 @@ checkAlignment(new Map(big_array.map(function(y) { return [y, null]; })));
 
 {
   const x = new Uint8Array(101);
-  assert(/\[ ... 101 more items \]$/.test(
+  assert(/\[ ... 101 more items ]$/.test(
       util.inspect(x, {maxArrayLength: 0})));
 }
 
@@ -901,4 +921,14 @@ checkAlignment(new Map(big_array.map(function(y) { return [y, null]; })));
     JSON.stringify(util.inspect.defaultOptions),
     JSON.stringify(oldOptions)
   );
+
+  assert.throws(() => {
+    util.inspect.defaultOptions = null;
+  }, /"options" must be an object/);
+
+  assert.throws(() => {
+    util.inspect.defaultOptions = 'bad';
+  }, /"options" must be an object/);
 }
+
+assert.doesNotThrow(() => util.inspect(process));

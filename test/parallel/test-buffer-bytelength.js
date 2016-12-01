@@ -7,10 +7,14 @@ const SlowBuffer = require('buffer').SlowBuffer;
 const vm = require('vm');
 
 // coerce values to string
-assert.strictEqual(Buffer.byteLength(32, 'latin1'), 2);
-assert.strictEqual(Buffer.byteLength(NaN, 'utf8'), 3);
-assert.strictEqual(Buffer.byteLength({}, 'latin1'), 15);
-assert.strictEqual(Buffer.byteLength(), 9);
+assert.throws(() => { Buffer.byteLength(32, 'latin1'); },
+              /"string" must be a string, Buffer, or ArrayBuffer/);
+assert.throws(() => { Buffer.byteLength(NaN, 'utf8'); },
+              /"string" must be a string, Buffer, or ArrayBuffer/);
+assert.throws(() => { Buffer.byteLength({}, 'latin1'); },
+              /"string" must be a string, Buffer, or ArrayBuffer/);
+assert.throws(() => { Buffer.byteLength(); },
+              /"string" must be a string, Buffer, or ArrayBuffer/);
 
 assert(ArrayBuffer.isView(new Buffer(10)));
 assert(ArrayBuffer.isView(new SlowBuffer(10)));
@@ -27,7 +31,7 @@ assert.strictEqual(Buffer.byteLength(ascii), 3);
 
 // ArrayBuffer
 var buffer = new ArrayBuffer(8);
-assert.equal(Buffer.byteLength(buffer), 8);
+assert.strictEqual(Buffer.byteLength(buffer), 8);
 
 // TypedArray
 var int8 = new Int8Array(8);
@@ -74,8 +78,9 @@ assert.strictEqual(Buffer.byteLength('ßœ∑≈', 'unkn0wn enc0ding'), 10);
 assert.strictEqual(Buffer.byteLength('aGVsbG8gd29ybGQ=', 'base64'), 11);
 assert.strictEqual(Buffer.byteLength('bm9kZS5qcyByb2NrcyE=', 'base64'), 14);
 assert.strictEqual(Buffer.byteLength('aGkk', 'base64'), 3);
-assert.strictEqual(Buffer.byteLength('bHNrZGZsa3NqZmtsc2xrZmFqc2RsZmtqcw==',
-    'base64'), 25);
+assert.strictEqual(
+  Buffer.byteLength('bHNrZGZsa3NqZmtsc2xrZmFqc2RsZmtqcw==', 'base64'), 25
+);
 // special padding
 assert.strictEqual(Buffer.byteLength('aaa=', 'base64'), 2);
 assert.strictEqual(Buffer.byteLength('aaaa==', 'base64'), 3);

@@ -19,7 +19,7 @@ actions.
 ## Class: Timeout
 
 This object is created internally and is returned from [`setTimeout()`][] and
-[`setInterval()`][]. It can be passed to [`clearTimeout`][] or
+[`setInterval()`][]. It can be passed to [`clearTimeout()`][] or
 [`clearInterval()`][] (respectively) in order to cancel the scheduled actions.
 
 By default, when a timer is scheduled using either [`setTimeout()`][] or
@@ -163,7 +163,7 @@ added: v0.0.1
 Cancels a `Timeout` object created by [`setTimeout()`][].
 
 
-[the Node.js Event Loop]: https://github.com/nodejs/node/blob/master/doc/topics/the-event-loop-timers-and-nexttick.md
+[the Node.js Event Loop]: https://github.com/nodejs/node/blob/master/doc/topics/event-loop-timers-and-nexttick.md
 [`TypeError`]: errors.html#errors_class_typeerror
 [`clearImmediate()`]: timers.html#timers_clearimmediate_immediate
 [`clearInterval()`]: timers.html#timers_clearinterval_timeout
